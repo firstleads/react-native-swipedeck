@@ -658,7 +658,7 @@ export default class SwipeCards extends Component<Props> {
         {this.props.stack ? this.renderStack() : this.renderCard()}
         {this.renderleft()}
         {this.renderUp()}
-        <Text>foo</Text>
+        {this.renderRight()}
       </View>
     )
   }
