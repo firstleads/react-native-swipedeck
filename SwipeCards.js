@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'transparent'
   },
-  Right: {
+  right: {
     borderColor: 'green',
     borderWidth: 2,
     position: 'absolute',
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     right: 0
   },
-  RightText: {
+  rightText: {
     fontSize: 16,
     color: 'green'
   },
@@ -635,14 +635,14 @@ export default class SwipeCards extends Component<Props> {
       const inner = this.props.RightView ? (
         this.props.RightView
       ) : (
-        <Text style={[styles.RightText, this.props.RightTextStyle]}>
-          {this.props.RightText}
+        <Text style={[styles.rightText, this.props.rightTextStyle]}>
+          {this.props.rightText}
         </Text>
       )
 
       return (
         <Animated.View
-          style={[styles.Right, this.props.RightStyle, animatedRightStyles]}
+          style={[styles.right, this.props.rightStyle, animatedRightStyles]}
         >
           {inner}
         </Animated.View>
@@ -658,7 +658,7 @@ export default class SwipeCards extends Component<Props> {
         {this.props.stack ? this.renderStack() : this.renderCard()}
         {this.renderleft()}
         {this.renderUp()}
-        {this.renderRight()}
+        <Text>foo</Text>
       </View>
     )
   }
