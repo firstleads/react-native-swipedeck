@@ -3,21 +3,12 @@
 /* Gratefully copied from https://github.com/brentvatne/react-native-animated-demo-tinder */
 import React, { Component } from 'react'
 
-import {
-  StyleSheet,
-  Text,
-  View,
-  Animated,
-  PanResponder,
-  Dimensions,
-  Image
-} from 'react-native'
+import { StyleSheet, Text, View, Animated, PanResponder } from 'react-native'
 
 import clamp from 'clamp'
 
 import Defaults from './Defaults'
 
-const viewport = Dimensions.get('window')
 const SWIPE_THRESHOLD = 120
 
 const styles = StyleSheet.create({
@@ -69,7 +60,7 @@ const styles = StyleSheet.create({
 })
 
 //Components could be unloaded and loaded and we will loose the users currentIndex, we can persist it here.
-let currentIndex = {}
+const currentIndex = {}
 let guid = 0
 
 type Props = {
@@ -107,12 +98,12 @@ export default class SwipeCards extends Component<Props> {
   static defaultProps = {
     allowGestureTermination: true,
     cardKey: 'key',
-    cardRemoved: ix => null,
+    cardRemoved: () => null,
     cards: [],
     dragY: true,
-    handleUp: card => null,
-    handleRight: card => null,
-    handleleft: card => null,
+    handleUp: () => null,
+    handleRight: () => null,
+    handleleft: () => null,
     hasUpAction: false,
     leftText: 'Nope!',
     loop: false,
@@ -121,7 +112,7 @@ export default class SwipeCards extends Component<Props> {
     onDragStart: () => {},
     onLoop: () => null,
     onPush: () => alert('tap'),
-    renderCard: card => null,
+    renderCard: () => null,
     rightText: 'Yup!',
     showUp: true,
     showRight: true,
@@ -387,7 +378,7 @@ export default class SwipeCards extends Component<Props> {
     }
 
     //Get the next stack of cards to render.
-    let cards = this.state.cards
+    const cards = this.state.cards
       .slice(
         currentIndex[this.guid],
         currentIndex[this.guid] + this.props.stackDepth
@@ -395,21 +386,21 @@ export default class SwipeCards extends Component<Props> {
       .reverse()
 
     return cards.map((card, i) => {
-      let offsetX =
+      const offsetX =
         this.props.stackOffsetX * cards.length - i * this.props.stackOffsetX
-      let lastOffsetX = offsetX + this.props.stackOffsetX
+      const lastOffsetX = offsetX + this.props.stackOffsetX
 
-      let offsetY =
+      const offsetY =
         this.props.stackOffsetY * cards.length - i * this.props.stackOffsetY
-      let lastOffsetY = offsetY + this.props.stackOffsetY
+      const lastOffsetY = offsetY + this.props.stackOffsetY
 
-      let opacity = 0.25 + 0.75 / cards.length * (i + 1)
-      let lastOpacity = 0.25 + 0.75 / cards.length * i
+      const opacity = 0.25 + 0.75 / cards.length * (i + 1)
+      const lastOpacity = 0.25 + 0.75 / cards.length * i
 
-      let scale = 0.85 + 0.15 / cards.length * (i + 1)
-      let lastScale = 0.85 + 0.15 / cards.length * i
+      const scale = 0.85 + 0.15 / cards.length * (i + 1)
+      const lastScale = 0.85 + 0.15 / cards.length * i
 
-      let style = {
+      const style = {
         position: 'absolute',
         top: this.state.enter.interpolate({
           inputRange: [0, 1],
@@ -438,21 +429,21 @@ export default class SwipeCards extends Component<Props> {
 
       //Is this the top card?  If so animate it and hook up the pan handlers.
       if (i + 1 === cards.length) {
-        let { pan } = this.state
-        let [translateX, translateY] = [pan.x, pan.y]
+        const { pan } = this.state
+        const [translateX, translateY] = [pan.x, pan.y]
 
-        let rotate = pan.x.interpolate({
+        const rotate = pan.x.interpolate({
           inputRange: [-200, 0, 200],
           outputRange: ['-30deg', '0deg', '30deg']
         })
-        let opacity = this.props.smoothTransition
+        const opacity = this.props.smoothTransition
           ? 1
           : pan.x.interpolate({
               inputRange: [-200, 0, 200],
               outputRange: [0.5, 1, 0.5]
             })
 
-        let animatedCardStyles = {
+        const animatedCardStyles = {
           ...style,
           transform: [
             { translateX: translateX },
@@ -491,21 +482,21 @@ export default class SwipeCards extends Component<Props> {
       return this.renderNoMoreCards()
     }
 
-    let { pan, enter } = this.state
-    let [translateX, translateY] = [pan.x, pan.y]
+    const { pan, enter } = this.state
+    const [translateX, translateY] = [pan.x, pan.y]
 
-    let rotate = pan.x.interpolate({
+    const rotate = pan.x.interpolate({
       inputRange: [-200, 0, 200],
       outputRange: ['-30deg', '0deg', '30deg']
     })
-    let opacity = pan.x.interpolate({
+    const opacity = pan.x.interpolate({
       inputRange: [-200, 0, 200],
       outputRange: [0.5, 1, 0.5]
     })
 
-    let scale = enter
+    const scale = enter
 
-    let animatedCardStyles = {
+    const animatedCardStyles = {
       transform: [{ translateX }, { translateY }, { rotate }, { scale }],
       opacity
     }
@@ -522,19 +513,19 @@ export default class SwipeCards extends Component<Props> {
   }
 
   renderleft() {
-    let { pan } = this.state
+    const { pan } = this.state
 
-    let leftOpacity = pan.x.interpolate({
+    const leftOpacity = pan.x.interpolate({
       inputRange: [-SWIPE_THRESHOLD, -(SWIPE_THRESHOLD / 2)],
       outputRange: [1, 0],
       extrapolate: 'clamp'
     })
-    let leftScale = pan.x.interpolate({
+    const leftScale = pan.x.interpolate({
       inputRange: [-SWIPE_THRESHOLD, 0],
       outputRange: [1, 0],
       extrapolate: 'clamp'
     })
-    let animatedleftStyles = {
+    const animatedleftStyles = {
       transform: [{ scale: leftScale }],
       opacity: leftOpacity
     }
@@ -567,19 +558,19 @@ export default class SwipeCards extends Component<Props> {
   renderUp() {
     if (!this.props.hasUpAction) return null
 
-    let { pan } = this.state
+    const { pan } = this.state
 
-    let upOpacity = pan.y.interpolate({
+    const upOpacity = pan.y.interpolate({
       inputRange: [-SWIPE_THRESHOLD, -(SWIPE_THRESHOLD / 2)],
       outputRange: [1, 0],
       extrapolate: 'clamp'
     })
-    let upScale = pan.x.interpolate({
+    const upScale = pan.x.interpolate({
       inputRange: [-SWIPE_THRESHOLD, 0, SWIPE_THRESHOLD],
       outputRange: [0, 1, 0],
       extrapolate: 'clamp'
     })
-    let animatedUpStyles = {
+    const animatedUpStyles = {
       transform: [{ scale: upScale }],
       opacity: upOpacity
     }
@@ -610,21 +601,21 @@ export default class SwipeCards extends Component<Props> {
   }
 
   renderRight() {
-    let { pan } = this.state
+    const { pan } = this.state
 
-    let RightOpacity = pan.x.interpolate({
+    const rightOpacity = pan.x.interpolate({
       inputRange: [SWIPE_THRESHOLD / 2, SWIPE_THRESHOLD],
       outputRange: [0, 1],
       extrapolate: 'clamp'
     })
-    let RightScale = pan.x.interpolate({
+    const rightScale = pan.x.interpolate({
       inputRange: [0, SWIPE_THRESHOLD],
       outputRange: [0.5, 1],
       extrapolate: 'clamp'
     })
-    let animatedRightStyles = {
-      transform: [{ scale: RightScale }],
-      opacity: RightOpacity
+    const animatedRightStyles = {
+      transform: [{ scale: rightScale }],
+      opacity: rightOpacity
     }
 
     if (this.props.renderRight) {
@@ -632,8 +623,8 @@ export default class SwipeCards extends Component<Props> {
     }
 
     if (this.props.showRight) {
-      const inner = this.props.RightView ? (
-        this.props.RightView
+      const inner = this.props.rightView ? (
+        this.props.rightView
       ) : (
         <Text style={[styles.rightText, this.props.rightTextStyle]}>
           {this.props.rightText}
