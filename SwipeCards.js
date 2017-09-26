@@ -71,7 +71,7 @@ type Props = {
   dragY: boolean,
   handleUp: Function,
   handleRight: Function,
-  handleleft: Function,
+  handleLeft: Function,
   hasUpAction: boolean,
   leftText: string,
   loop: boolean,
@@ -103,7 +103,7 @@ export default class SwipeCards extends Component<Props> {
     dragY: true,
     handleUp: () => null,
     handleRight: () => null,
-    handleleft: () => null,
+    handleLeft: () => null,
     hasUpAction: false,
     leftText: 'Nope!',
     loop: false,
@@ -205,7 +205,7 @@ export default class SwipeCards extends Component<Props> {
           if (hasMovedRight) {
             cancelled = this.props.handleRight(this.state.card)
           } else if (hasMovedLeft) {
-            cancelled = this.props.handleleft(this.state.card)
+            cancelled = this.props.handleLeft(this.state.card)
           } else if (hasMovedUp && this.props.hasUpAction) {
             cancelled = this.props.handleUp(this.state.card)
           } else {
@@ -227,7 +227,7 @@ export default class SwipeCards extends Component<Props> {
               velocity: { x: velocity, y: vy },
               deceleration: 0.98
             })
-            this.cardAnimation.start(status => {
+            this.cardAnimation.start((status) => {
               if (status.finished) this._advanceState()
               else this._resetState()
 
@@ -263,7 +263,7 @@ export default class SwipeCards extends Component<Props> {
   _forceLeftSwipe() {
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: -500, y: 0 }
-    }).start(status => {
+    }).start((status) => {
       if (status.finished) this._advanceState()
       else this._resetState()
 
@@ -275,7 +275,7 @@ export default class SwipeCards extends Component<Props> {
   _forceUpSwipe() {
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: 0, y: 500 }
-    }).start(status => {
+    }).start((status) => {
       if (status.finished) this._advanceState()
       else this._resetState()
 
@@ -287,7 +287,7 @@ export default class SwipeCards extends Component<Props> {
   _forceRightSwipe() {
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: 500, y: 0 }
-    }).start(status => {
+    }).start((status) => {
       if (status.finished) this._advanceState()
       else this._resetState()
 
@@ -458,6 +458,8 @@ export default class SwipeCards extends Component<Props> {
           ]
         }
 
+        window.card = card
+
         return (
           <Animated.View
             key={card[this.props.cardKey]}
@@ -535,13 +537,11 @@ export default class SwipeCards extends Component<Props> {
     }
 
     if (this.props.showleft) {
-      const inner = this.props.noView ? (
-        this.props.noView
-      ) : (
-        <Text style={[styles.leftText, this.props.leftTextStyle]}>
-          {this.props.leftText}
-        </Text>
-      )
+      const inner = this.props.noView
+        ? this.props.noView
+        : <Text style={[styles.leftText, this.props.leftTextStyle]}>
+            {this.props.leftText}
+          </Text>
 
       return (
         <Animated.View
@@ -580,13 +580,11 @@ export default class SwipeCards extends Component<Props> {
     }
 
     if (this.props.showUp) {
-      const inner = this.props.upView ? (
-        this.props.upView
-      ) : (
-        <Text style={[styles.upText, this.props.upTextStyle]}>
-          {this.props.upText}
-        </Text>
-      )
+      const inner = this.props.upView
+        ? this.props.upView
+        : <Text style={[styles.upText, this.props.upTextStyle]}>
+            {this.props.upText}
+          </Text>
 
       return (
         <Animated.View
@@ -623,13 +621,11 @@ export default class SwipeCards extends Component<Props> {
     }
 
     if (this.props.showRight) {
-      const inner = this.props.rightView ? (
-        this.props.rightView
-      ) : (
-        <Text style={[styles.rightText, this.props.rightTextStyle]}>
-          {this.props.rightText}
-        </Text>
-      )
+      const inner = this.props.rightView
+        ? this.props.rightView
+        : <Text style={[styles.rightText, this.props.rightTextStyle]}>
+            {this.props.rightText}
+          </Text>
 
       return (
         <Animated.View
