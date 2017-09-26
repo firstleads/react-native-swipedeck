@@ -1,6 +1,6 @@
 {
   "name": "react-native-swipedeck",
-  "version": "0.3.1-beta",
+  "version": "0.3.0-beta.3",
   "description": "UI for quickly making yes/no decisions on a set of cards",
   "main": "SwipeCards.js",
   "scripts": {
@@ -10,19 +10,12 @@
     "type": "git",
     "url": "git+https://github.com/first-io/react-native-swipedeck.git"
   },
-  "keywords": [
-    "react-native",
-    "tinder",
-    "cards",
-    "swipe"
-  ],
+  "keywords": ["react-native", "tinder", "cards", "swipe"],
   "author": "meteor-factory",
-  "contributors": [
-    {
-      "name": "Ben Makuh",
-      "url": "https://first.io"
-    }
-  ],
+  "contributors": [{
+    "name": "Ben Makuh",
+    "url": "https://first.io"
+  }],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/meteor-factory/react-native-tinder-swipe-cards/issues"
