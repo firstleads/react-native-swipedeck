@@ -3,7 +3,14 @@
 /* Gratefully copied from https://github.com/brentvatne/react-native-animated-demo-tinder */
 import React, { Component } from 'react'
 
-import { StyleSheet, Text, View, Animated, PanResponder } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  Button,
+  View,
+  Animated,
+  PanResponder,
+} from 'react-native'
 
 import clamp from 'clamp'
 
@@ -16,7 +23,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+  },
+  buttonContainer: {
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginHorizontal: 10,
+    zIndex: 0,
   },
   right: {
     borderColor: 'green',
@@ -25,11 +42,13 @@ const styles = StyleSheet.create({
     padding: 20,
     bottom: 20,
     borderRadius: 5,
-    right: 0
+    right: 0,
+    zIndex: 3,
+    elevation: 40,
   },
   rightText: {
     fontSize: 16,
-    color: 'green'
+    color: 'green',
   },
   up: {
     borderColor: 'blue',
@@ -38,11 +57,13 @@ const styles = StyleSheet.create({
     padding: 20,
     bottom: 20,
     borderRadius: 5,
-    right: 20
+    right: 20,
+    zIndex: 3,
+    elevation: 40,
   },
   upText: {
     fontSize: 16,
-    color: 'blue'
+    color: 'blue',
   },
   left: {
     borderColor: 'red',
@@ -51,12 +72,14 @@ const styles = StyleSheet.create({
     bottom: 20,
     padding: 20,
     borderRadius: 5,
-    left: 0
+    left: 0,
+    zIndex: 3,
+    elevation: 40,
   },
   leftText: {
     fontSize: 16,
-    color: 'red'
-  }
+    color: 'red',
+  },
 })
 
 //Components could be unloaded and loaded and we will loose the users currentIndex, we can persist it here.
@@ -79,9 +102,11 @@ type Props = {
   upView: React.Element<*>,
   noView: React.Element<*>,
   onLoop: Function,
-  onPush: Function,
+  onPress: Function,
   renderCard: Function,
+  renderLeftButton: Function,
   renderNoMoreCards: Function,
+  renderRightButton: Function,
   rightText: string,
   rightView: React.Element<*>,
   showUp: boolean,
@@ -92,7 +117,7 @@ type Props = {
   stackDepth: number,
   stackGuid: string,
   stackOffsetX: number,
-  stackOffsetY: number
+  stackOffsetY: number,
 }
 export default class SwipeCards extends Component<Props> {
   static defaultProps = {
@@ -111,7 +136,7 @@ export default class SwipeCards extends Component<Props> {
     onDragRelease: () => {},
     onDragStart: () => {},
     onLoop: () => null,
-    onPush: () => alert('tap'),
+    onPress: () => alert('tap'),
     renderCard: () => null,
     rightText: 'Yup!',
     showUp: true,
@@ -122,7 +147,7 @@ export default class SwipeCards extends Component<Props> {
     stackDepth: 5,
     stackOffsetX: 25,
     stackOffsetY: 0,
-    style: styles.container
+    style: styles.container,
   }
 
   constructor(props) {
@@ -136,7 +161,7 @@ export default class SwipeCards extends Component<Props> {
       pan: new Animated.ValueXY(0),
       enter: new Animated.Value(0.5),
       cards: [].concat(this.props.cards),
-      card: this.props.cards[currentIndex[this.guid]]
+      card: this.props.cards[currentIndex[this.guid]],
     }
 
     this.lastX = 0
@@ -156,7 +181,7 @@ export default class SwipeCards extends Component<Props> {
       onPanResponderGrant: (e, gestureState) => {
         this.state.pan.setOffset({
           x: this.state.pan.x._value,
-          y: this.state.pan.y._value
+          y: this.state.pan.y._value,
         })
         this.state.pan.setValue({ x: 0, y: 0 })
       },
@@ -166,7 +191,7 @@ export default class SwipeCards extends Component<Props> {
 
       onPanResponderMove: Animated.event([
         null,
-        { dx: this.state.pan.x, dy: this.props.dragY ? this.state.pan.y : 0 }
+        { dx: this.state.pan.x, dy: this.props.dragY ? this.state.pan.y : 0 },
       ]),
 
       onPanResponderRelease: (e, { vx, vy, dx, dy }) => {
@@ -175,7 +200,7 @@ export default class SwipeCards extends Component<Props> {
         let velocity
         if (Math.abs(dx) <= 5 && Math.abs(dy) <= 5) {
           //meaning the gesture did not cover any distance
-          this.props.onPush(this.state.card)
+          this.props.onPress(this.state.card)
         }
 
         if (vx > 0) {
@@ -225,9 +250,9 @@ export default class SwipeCards extends Component<Props> {
           } else {
             this.cardAnimation = Animated.decay(this.state.pan, {
               velocity: { x: velocity, y: vy },
-              deceleration: 0.98
+              deceleration: 0.98,
             })
-            this.cardAnimation.start((status) => {
+            this.cardAnimation.start(status => {
               if (status.finished) this._advanceState()
               else this._resetState()
 
@@ -237,7 +262,7 @@ export default class SwipeCards extends Component<Props> {
         } else {
           this._resetPan()
         }
-      }
+      },
     })
   }
 
@@ -255,15 +280,15 @@ export default class SwipeCards extends Component<Props> {
       currentIndex[this.guid] = 0
       this.setState({
         cards: [].concat(nextProps.cards),
-        card: nextProps.cards[0]
+        card: nextProps.cards[0],
       })
     }
   }
 
-  _forceLeftSwipe() {
+  _forceLeftSwipe = () => {
     this.cardAnimation = Animated.timing(this.state.pan, {
-      toValue: { x: -500, y: 0 }
-    }).start((status) => {
+      toValue: { x: -500, y: 0 },
+    }).start(status => {
       if (status.finished) this._advanceState()
       else this._resetState()
 
@@ -272,10 +297,10 @@ export default class SwipeCards extends Component<Props> {
     this.props.cardRemoved(currentIndex[this.guid])
   }
 
-  _forceUpSwipe() {
+  _forceUpSwipe = () => {
     this.cardAnimation = Animated.timing(this.state.pan, {
-      toValue: { x: 0, y: 500 }
-    }).start((status) => {
+      toValue: { x: 0, y: 500 },
+    }).start(status => {
       if (status.finished) this._advanceState()
       else this._resetState()
 
@@ -284,10 +309,10 @@ export default class SwipeCards extends Component<Props> {
     this.props.cardRemoved(currentIndex[this.guid])
   }
 
-  _forceRightSwipe() {
+  _forceRightSwipe = () => {
     this.cardAnimation = Animated.timing(this.state.pan, {
-      toValue: { x: 500, y: 0 }
-    }).start((status) => {
+      toValue: { x: 500, y: 0 },
+    }).start(status => {
       if (status.finished) this._advanceState()
       else this._resetState()
 
@@ -310,7 +335,7 @@ export default class SwipeCards extends Component<Props> {
     }
 
     this.setState({
-      card: this.state.cards[currentIndex[this.guid]]
+      card: this.state.cards[currentIndex[this.guid]],
     })
   }
 
@@ -326,7 +351,7 @@ export default class SwipeCards extends Component<Props> {
     }
 
     this.setState({
-      card: this.state.cards[currentIndex[this.guid]]
+      card: this.state.cards[currentIndex[this.guid]],
     })
   }
 
@@ -337,7 +362,7 @@ export default class SwipeCards extends Component<Props> {
   _resetPan() {
     Animated.spring(this.state.pan, {
       toValue: { x: 0, y: 0 },
-      friction: 4
+      friction: 4,
     }).start()
   }
 
@@ -404,27 +429,28 @@ export default class SwipeCards extends Component<Props> {
         position: 'absolute',
         top: this.state.enter.interpolate({
           inputRange: [0, 1],
-          outputRange: [lastOffsetY, offsetY]
+          outputRange: [lastOffsetY, offsetY],
         }),
         left: this.state.enter.interpolate({
           inputRange: [0, 1],
-          outputRange: [lastOffsetX, offsetX]
+          outputRange: [lastOffsetX, offsetX],
         }),
         opacity: this.props.smoothTransition
           ? 1
           : this.state.enter.interpolate({
               inputRange: [0, 1],
-              outputRange: [lastOpacity, opacity]
+              outputRange: [lastOpacity, opacity],
             }),
         transform: [
           {
             scale: this.state.enter.interpolate({
               inputRange: [0, 1],
-              outputRange: [lastScale, scale]
-            })
-          }
+              outputRange: [lastScale, scale],
+            }),
+          },
         ],
-        elevation: i * 10
+        elevation: i * 10,
+        zIndex: 2,
       }
 
       //Is this the top card?  If so animate it and hook up the pan handlers.
@@ -434,13 +460,13 @@ export default class SwipeCards extends Component<Props> {
 
         const rotate = pan.x.interpolate({
           inputRange: [-200, 0, 200],
-          outputRange: ['-30deg', '0deg', '30deg']
+          outputRange: ['-30deg', '0deg', '30deg'],
         })
         const opacity = this.props.smoothTransition
           ? 1
           : pan.x.interpolate({
               inputRange: [-200, 0, 200],
-              outputRange: [0.5, 1, 0.5]
+              outputRange: [0.5, 1, 0.5],
             })
 
         const animatedCardStyles = {
@@ -452,10 +478,10 @@ export default class SwipeCards extends Component<Props> {
             {
               scale: this.state.enter.interpolate({
                 inputRange: [0, 1],
-                outputRange: [lastScale, scale]
-              })
-            }
-          ]
+                outputRange: [lastScale, scale],
+              }),
+            },
+          ],
         }
 
         window.card = card
@@ -489,18 +515,18 @@ export default class SwipeCards extends Component<Props> {
 
     const rotate = pan.x.interpolate({
       inputRange: [-200, 0, 200],
-      outputRange: ['-30deg', '0deg', '30deg']
+      outputRange: ['-30deg', '0deg', '30deg'],
     })
     const opacity = pan.x.interpolate({
       inputRange: [-200, 0, 200],
-      outputRange: [0.5, 1, 0.5]
+      outputRange: [0.5, 1, 0.5],
     })
 
     const scale = enter
 
     const animatedCardStyles = {
       transform: [{ translateX }, { translateY }, { rotate }, { scale }],
-      opacity
+      opacity,
     }
 
     return (
@@ -520,16 +546,16 @@ export default class SwipeCards extends Component<Props> {
     const leftOpacity = pan.x.interpolate({
       inputRange: [-SWIPE_THRESHOLD, -(SWIPE_THRESHOLD / 2)],
       outputRange: [1, 0],
-      extrapolate: 'clamp'
+      extrapolate: 'clamp',
     })
     const leftScale = pan.x.interpolate({
       inputRange: [-SWIPE_THRESHOLD, 0],
       outputRange: [1, 0],
-      extrapolate: 'clamp'
+      extrapolate: 'clamp',
     })
     const animatedleftStyles = {
       transform: [{ scale: leftScale }],
-      opacity: leftOpacity
+      opacity: leftOpacity,
     }
 
     if (this.props.renderleft) {
@@ -537,11 +563,13 @@ export default class SwipeCards extends Component<Props> {
     }
 
     if (this.props.showleft) {
-      const inner = this.props.noView
-        ? this.props.noView
-        : <Text style={[styles.leftText, this.props.leftTextStyle]}>
-            {this.props.leftText}
-          </Text>
+      const inner = this.props.noView ? (
+        this.props.noView
+      ) : (
+        <Text style={[styles.leftText, this.props.leftTextStyle]}>
+          {this.props.leftText}
+        </Text>
+      )
 
       return (
         <Animated.View
@@ -563,16 +591,16 @@ export default class SwipeCards extends Component<Props> {
     const upOpacity = pan.y.interpolate({
       inputRange: [-SWIPE_THRESHOLD, -(SWIPE_THRESHOLD / 2)],
       outputRange: [1, 0],
-      extrapolate: 'clamp'
+      extrapolate: 'clamp',
     })
     const upScale = pan.x.interpolate({
       inputRange: [-SWIPE_THRESHOLD, 0, SWIPE_THRESHOLD],
       outputRange: [0, 1, 0],
-      extrapolate: 'clamp'
+      extrapolate: 'clamp',
     })
     const animatedUpStyles = {
       transform: [{ scale: upScale }],
-      opacity: upOpacity
+      opacity: upOpacity,
     }
 
     if (this.props.renderUp) {
@@ -580,11 +608,13 @@ export default class SwipeCards extends Component<Props> {
     }
 
     if (this.props.showUp) {
-      const inner = this.props.upView
-        ? this.props.upView
-        : <Text style={[styles.upText, this.props.upTextStyle]}>
-            {this.props.upText}
-          </Text>
+      const inner = this.props.upView ? (
+        this.props.upView
+      ) : (
+        <Text style={[styles.upText, this.props.upTextStyle]}>
+          {this.props.upText}
+        </Text>
+      )
 
       return (
         <Animated.View
@@ -604,16 +634,16 @@ export default class SwipeCards extends Component<Props> {
     const rightOpacity = pan.x.interpolate({
       inputRange: [SWIPE_THRESHOLD / 2, SWIPE_THRESHOLD],
       outputRange: [0, 1],
-      extrapolate: 'clamp'
+      extrapolate: 'clamp',
     })
     const rightScale = pan.x.interpolate({
       inputRange: [0, SWIPE_THRESHOLD],
       outputRange: [0.5, 1],
-      extrapolate: 'clamp'
+      extrapolate: 'clamp',
     })
     const animatedRightStyles = {
       transform: [{ scale: rightScale }],
-      opacity: rightOpacity
+      opacity: rightOpacity,
     }
 
     if (this.props.renderRight) {
@@ -621,11 +651,13 @@ export default class SwipeCards extends Component<Props> {
     }
 
     if (this.props.showRight) {
-      const inner = this.props.rightView
-        ? this.props.rightView
-        : <Text style={[styles.rightText, this.props.rightTextStyle]}>
-            {this.props.rightText}
-          </Text>
+      const inner = this.props.rightView ? (
+        this.props.rightView
+      ) : (
+        <Text style={[styles.rightText, this.props.rightTextStyle]}>
+          {this.props.rightText}
+        </Text>
+      )
 
       return (
         <Animated.View
@@ -640,12 +672,46 @@ export default class SwipeCards extends Component<Props> {
   }
 
   render() {
+    const { renderLeftButton, renderRightButton, renderUpButton } = this.props
+
+    const onLeftPress = () => {
+      this._forceLeftSwipe()
+      this.props.handleLeft(this.state.card)
+    }
+
+    const onRightPress = () => {
+      this._forceRightSwipe()
+      this.props.handleRight(this.state.card)
+    }
+
+    const onUpPress = () => {
+      this._forceUpSwipe()
+      this.props.handleUp(this.state.card)
+    }
+
     return (
       <View style={styles.container}>
         {this.props.stack ? this.renderStack() : this.renderCard()}
         {this.renderleft()}
         {this.renderUp()}
         {this.renderRight()}
+        <View style={styles.buttonContainer}>
+          {renderLeftButton ? (
+            renderLeftButton({ onPress: onLeftPress })
+          ) : (
+            <Button color="red" title="nope" onPress={onLeftPress} />
+          )}
+          {renderUpButton ? (
+            renderUpButton({ onPress: onUpPress })
+          ) : (
+            <Button title="maybe" onPress={onUpPress} />
+          )}
+          {renderRightButton ? (
+            renderRightButton({ onPress: onRightPress })
+          ) : (
+            <Button title="yep" onPress={onRightPress} />
+          )}
+        </View>
       </View>
     )
   }
