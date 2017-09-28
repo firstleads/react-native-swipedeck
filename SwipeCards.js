@@ -92,6 +92,7 @@ type Props = {
   cardRemoved: Function,
   cards: Array<*>,
   dragY: boolean,
+  draggingDisabled: boolean,
   handleUp: Function,
   handleRight: Function,
   handleLeft: Function,
@@ -173,6 +174,9 @@ export default class SwipeCards extends Component<Props> {
       onMoveShouldSetPanResponderCapture: (e, gestureState) => {
         if (Math.abs(gestureState.dx) > 3 || Math.abs(gestureState.dy) > 3) {
           this.props.onDragStart()
+          if (this.props.draggingDisabled) {
+            return false
+          }
           return true
         }
         return false
@@ -672,19 +676,30 @@ export default class SwipeCards extends Component<Props> {
   }
 
   render() {
-    const { renderLeftButton, renderRightButton, renderUpButton } = this.props
+    const {
+      draggingDisabled,
+      renderLeftButton,
+      renderRightButton,
+      renderUpButton,
+    } = this.props
 
     const onLeftPress = () => {
+      if (draggingDisabled) return
+
       this._forceLeftSwipe()
       this.props.handleLeft(this.state.card)
     }
 
     const onRightPress = () => {
+      if (draggingDisabled) return
+
       this._forceRightSwipe()
       this.props.handleRight(this.state.card)
     }
 
     const onUpPress = () => {
+      if (draggingDisabled) return
+
       this._forceUpSwipe()
       this.props.handleUp(this.state.card)
     }
