@@ -259,12 +259,12 @@ const styles = StyleSheet.create({
 | onPush            | Function | A callback clicking the card                                | alert('tap') |
 | renderCard*       | Function | Renders the card with the current data                      |              |
 | renderLeft        | Function | Renders Left                                                |              |
-| renderLeftButton        | Function | Renders Left button. Takes `onPress` prop             |              |
+| renderLeftButton        | Function | Renders Left button. Takes `onPress` and `disabled` props             |              |
 | renderUp       | Function | Renders Up                                                     |              |
-| renderUpButton       | Function | Renders Up Button. Takes `onPress` prop                  |              |
+| renderUpButton       | Function | Renders Up Button. Takes `onPress` and `disabled` props                  |              |
 | renderNoMoreCards | Function | Renders what is shown after swiped last card                |              |
 | renderRight         | Function | Renders Right                                             |              |
-| renderRightButton         | Function | Renders Right Button. Takes `onPress` prop          |              |
+| renderRightButton         | Function | Renders Right Button. Takes `onPress` and `disabled` props          |              |
 | showLeft          | Boolean  | Shows the 'Left'                                            | `true`       |
 | showUp         | Boolean  | Shows the 'Up'                                                 | `true`       |
 | showRight           | Boolean  | Shows the 'Right' component                               | `true`       |

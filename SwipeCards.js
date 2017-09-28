@@ -423,8 +423,8 @@ export default class SwipeCards extends Component<Props> {
         this.props.stackOffsetY * cards.length - i * this.props.stackOffsetY
       const lastOffsetY = offsetY + this.props.stackOffsetY
 
-      const opacity = 1//0.25 + 0.75 / cards.length * (i + 1)
-      const lastOpacity = 1 // 0.25 + 0.75 / cards.length * i
+      const opacity = 0.25 + 0.75 / cards.length * (i + 1)
+      const lastOpacity = 0.25 + 0.75 / cards.length * i
 
       const scale = 0.85 + 0.15 / cards.length * (i + 1)
       const lastScale = 0.85 + 0.15 / cards.length * i
@@ -678,27 +678,43 @@ export default class SwipeCards extends Component<Props> {
   render() {
     const {
       draggingDisabled,
+      onDragStart,
       renderLeftButton,
       renderRightButton,
       renderUpButton,
     } = this.props
 
     const onLeftPress = () => {
-      if (draggingDisabled) return
+      if (!this.state.card) return
+
+      if (draggingDisabled) {
+        onDragStart()
+        return
+      }
 
       this._forceLeftSwipe()
       this.props.handleLeft(this.state.card)
     }
 
     const onRightPress = () => {
-      if (draggingDisabled) return
+      if (!this.state.card) return
+
+      if (draggingDisabled) {
+        onDragStart()
+        return
+      }
 
       this._forceRightSwipe()
       this.props.handleRight(this.state.card)
     }
 
     const onUpPress = () => {
-      if (draggingDisabled) return
+      if (!this.state.card) return
+
+      if (draggingDisabled) {
+        onDragStart()
+        return
+      }
 
       this._forceUpSwipe()
       this.props.handleUp(this.state.card)
@@ -712,19 +728,38 @@ export default class SwipeCards extends Component<Props> {
         {this.renderRight()}
         <View style={styles.buttonContainer}>
           {renderLeftButton ? (
-            renderLeftButton({ onPress: onLeftPress })
+            renderLeftButton({
+              onPress: onLeftPress,
+              disabled: !this.state.card,
+            })
           ) : (
-            <Button color="red" title="nope" onPress={onLeftPress} />
+            <Button
+              color="red"
+              title="nope"
+              onPress={onLeftPress}
+              disabled={!this.state.card}
+            />
           )}
           {renderUpButton ? (
-            renderUpButton({ onPress: onUpPress })
+            renderUpButton({ onPress: onUpPress, disabled: !this.state.card })
           ) : (
-            <Button title="maybe" onPress={onUpPress} />
+            <Button
+              title="maybe"
+              onPress={onUpPress}
+              disabled={!this.state.card}
+            />
           )}
           {renderRightButton ? (
-            renderRightButton({ onPress: onRightPress })
+            renderRightButton({
+              onPress: onRightPress,
+              disabled: !this.state.card,
+            })
           ) : (
-            <Button title="yep" onPress={onRightPress} />
+            <Button
+              title="yep"
+              onPress={onRightPress}
+              disabled={!this.state.card}
+            />
           )}
         </View>
       </View>
