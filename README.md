@@ -242,36 +242,40 @@ const styles = StyleSheet.create({
 | cards*            | Array    | Data that will be provided as props for the cards           |              |
 | containerStyle    | style    | Override default style                                      |              |
 | dragY             | Boolean  | Allows dragging cards vertically                            | `true`       |
+| draggingDisabled  | Boolean  | Allows dragging or not                                      | `false`      |
 | handleLeft        | Function | Called when card is 'rejected' with that card's data        |              |
-| handleRight         | Function | Called when card is 'passed' with that card's data          |              |
-| hasUpAction    | Boolean  | Includes the possibility to swipe up and its components     | `false`      |
+| handleRight         | Function | Called when card is 'passed' with that card's data        |              |
+| hasUpAction    | Boolean  | Includes the possibility to swipe up and its components        | `false`      |
 | loop              | Boolean  | If true, start again when run out of cards                  | `false`      |
-| upStyle        | style    | Override default style                                      |              |
-| upText         | string   | Text to render on Up vote                                | `Maybe!`      |
-| upTextStyle    | style    | Override default style                                      |              |
-| upView         | element  | React component to render on a Up vote                   |              |
-| leftText            | string   | Text to render on No vote                                   | `Nope!`       |
-| leftView            | element  | React component to render on a No vote                      |              |
+| upStyle        | style    | Override default style                                         |              |
+| upText         | string   | Text to render on Up vote                                      | `Maybe!`     |
+| upTextStyle    | style    | Override default style                                         |              |
+| upView         | element  | React component to render on a Up vote                         |              |
+| leftText            | string   | Text to render on No vote                                 | `Nope!`      |
+| leftView            | element  | React component to render on a No vote                    |              |
 | leftStyle         | style    | Override default style                                      |              |
 | leftTextStyle     | style    | Override default style                                      |              |
 | onLoop            | Function | Called when card list returns to the beginning              |              |
 | onPush            | Function | A callback clicking the card                                | alert('tap') |
 | renderCard*       | Function | Renders the card with the current data                      |              |
 | renderLeft        | Function | Renders Left                                                |              |
-| renderUp       | Function | Renders Up                                               |              |
+| renderLeftButton        | Function | Renders Left button. Takes `onPress` prop             |              |
+| renderUp       | Function | Renders Up                                                     |              |
+| renderUpButton       | Function | Renders Up Button. Takes `onPress` prop                  |              |
 | renderNoMoreCards | Function | Renders what is shown after swiped last card                |              |
-| renderRight         | Function | Renders Right                                                 |              |
+| renderRight         | Function | Renders Right                                             |              |
+| renderRightButton         | Function | Renders Right Button. Takes `onPress` prop          |              |
 | showLeft          | Boolean  | Shows the 'Left'                                            | `true`       |
-| showUp         | Boolean  | Shows the 'Up'                                           | `true`       |
-| showRight           | Boolean  | Shows the 'Right' component                                   | `true`       |
+| showUp         | Boolean  | Shows the 'Up'                                                 | `true`       |
+| showRight           | Boolean  | Shows the 'Right' component                               | `true`       |
 | smoothTransition  | Boolean  | Disables a slow transition fading the current card out      | `false`      |
 | stack             | Boolean  | Enables the stack mode                                      | `false`      |
 | stackOffsetX      | Number   | Horizontal offset between cards in stack                    | 25           |
 | stackOffsetY      | Number   | Vertical offset between cards in stack                      | 0            |
-| rightStyle          | style    | Override default style                                      |              |
-| rightText           | string   | Text to render on Yes vote                                  | `Yup!`        |
-| rightTextStyle      | style    | Override default style                                      |              |
-| rightView           | element  | React component to render on a Yes vote                     |              |
+| rightStyle          | style    | Override default style                                    |              |
+| rightText           | string   | Text to render on Yes vote                                | `Yup!`       |
+| rightTextStyle      | style    | Override default style                                    |              |
+| rightView           | element  | React component to render on a Yes vote                   |              |
 
 
 
@@ -279,12 +283,9 @@ const styles = StyleSheet.create({
 *required
 
 ### Todo (PRs welcome!)
-- [x] Show next card underneath current card
 - [ ] Shadow when card is being dragged
 - [ ] Example with backend
 - [ ] Example with polaroids
 - [ ] Submit to repos
-- [x] renderRight
-- [x] renderLeft
 - [ ] Testing
 - [ ] Add more args to `cardRemoved`?
