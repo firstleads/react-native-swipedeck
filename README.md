@@ -239,7 +239,6 @@ const styles = StyleSheet.create({
 | leftStyle         | style    | Override default style                                      |              |
 | leftTextStyle     | style    | Override default style                                      |              |
 | onLoop            | Function | Called when card list returns to the beginning              |              |
-| onPress            | Function | DEPRECATED: just attach an `onPress` on the component you pass to `renderCard`                                |  |
 | renderCard*       | Function | Renders the card with the current data                      |              |
 | renderLeft        | Function | Renders Left                                                |              |
 | renderLeftButton        | Function | Renders Left button. Takes `onPress` and `disabled` props             |              |
