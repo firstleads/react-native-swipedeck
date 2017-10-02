@@ -14,80 +14,69 @@ A [package](https://www.npmjs.com/package/react-native-swipe-cards) based on [@b
 
 ```javascript
 // SwipeCards.js
-'use strict';
-
 import React, { Component } from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 
 import SwipeCards from 'react-native-swipe-cards';
 
-let Card = React.createClass({
-  render() {
-    return (
-      <View style={[styles.card, {backgroundColor: this.props.backgroundColor}]}>
-        <Text>{this.props.text}</Text>
-      </View>
-    )
-  }
-})
+const Card = ({ backgroundColor, text }) => {
+  return (
+    <View style={[styles.card, {backgroundColor}]}>
+      <Text>{text}</Text>
+    </View>
+  )
+}
 
-class NoMoreCards extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <View>
-        <Text style={styles.noMoreCardsText}>No more cards</Text>
-      </View>
-    )
-  }
+const NoMoreCards = () => {
+  return (
+    <View>
+      <Text style={styles.noMoreCardsText}>No more cards</Text>
+    </View>
+  )
 }
 
 const Cards = [
-  {text: 'Tomato', backgroundColor: 'red'},
+  {text: 'Tomato',    backgroundColor: 'red'},
   {text: 'Aubergine', backgroundColor: 'purple'},
   {text: 'Courgette', backgroundColor: 'green'},
   {text: 'Blueberry', backgroundColor: 'blue'},
-  {text: 'Umm...', backgroundColor: 'cyan'},
-  {text: 'orange', backgroundColor: 'orange'},
+  {text: 'Umm...',    backgroundColor: 'cyan'},
+  {text: 'orange',    backgroundColor: 'orange'},
 ]
 
-export default React.createClass({
-  getInitialState() {
-    return {
+export default class extends Component {
+  state = {
       cards: Cards
-    }
-  },
-  handleRight (card) {
+  }
+
+  onRightSwipe (card) {
     console.log(`Right for ${card.text}`)
-  },
-  handleLeft (card) {
+  }
+
+  onLeftSwipe (card) {
     console.log(`Left for ${card.text}`)
-  },
-  handleUp (card) {
+  }
+
+  onUpSwipe (card) {
     console.log(`Up for ${card.text}`)
-  },
+  }
+
   render() {
     return (
       <SwipeCards
         cards={this.state.cards}
-
         renderCard={(cardData) => <Card {...cardData} />}
         renderNoMoreCards={() => <NoMoreCards />}
-
-        handleRight={this.handleRight}
-        handleLeft={this.handleLeft}
-        handleUp={this.handleUp}
+        onRightSwipe={this.onRightSwipe}
+        onLeftSwipe={this.onLeftSwipe}
+        onUpSwipe={this.onUpSwipe}
         hasUpAction
-
         // If you want a stack of cards instead of one-per-one view, activate stack mode
         // stack={true}
       />
     )
   }
-})
+}
 
 const styles = StyleSheet.create({
   card: {
@@ -106,34 +95,28 @@ const styles = StyleSheet.create({
 
 ### More complex example
 ```javascript
-'use strict';
-
 import React from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 
 
 import SwipeCards from 'react-native-swipe-cards';
 
-let Card = React.createClass({
-  render() {
-    return (
-      <View style={styles.card}>
-        <Image style={styles.thumbnail} source={{uri: this.props.image}} />
-        <Text style={styles.text}>This is card {this.props.name}</Text>
-      </View>
-    )
-  }
-})
+const Card = ({ image, name }) => {
+  return (
+    <View style={styles.card}>
+      <Image style={styles.thumbnail} source={{uri: image}} />
+      <Text style={styles.text}>This is card {name}</Text>
+    </View>
+  )
+}
 
-let NoMoreCards = React.createClass({
-  render() {
-    return (
-      <View style={styles.noMoreCards}>
-        <Text>No more cards</Text>
-      </View>
-    )
-  }
-})
+const NoMoreCards = () => {
+  return (
+    <View>
+      <Text style={styles.noMoreCardsText}>No more cards</Text>
+    </View>
+  )
+}
 
 const Cards = [
   {name: '1', image: 'https://media.giphy.com/media/GfXFVHUzjlbOg/giphy.gif'},
@@ -154,23 +137,24 @@ const Cards2 = [
   {name: '13', image: 'https://media.giphy.com/media/OVHFny0I7njuU/giphy.gif'},
 ]
 
-export default React.createClass({
-  getInitialState() {
-    return {
+export default class extends Component {
+  state = {
       cards: Cards,
       outOfCards: false
-    }
-  },
-  handleRight (card) {
+  }
+
+  onRightSwipe (card) {
     console.log("right")
-  },
-  handleLeft (card) {
+  }
+
+  onLeftSwipe (card) {
     console.log("left")
-  },
-  cardRemoved (index) {
+  }
+
+  onCardRemoved (index) {
     console.log(`The index is ${index}`);
 
-    let CARD_REFRESH_LIMIT = 3
+    const CARD_REFRESH_LIMIT = 3
 
     if (this.state.cards.length - index <= CARD_REFRESH_LIMIT + 1) {
       console.log(`There are only ${this.state.cards.length - index - 1} cards left.`);
@@ -183,10 +167,9 @@ export default React.createClass({
           outOfCards: true
         })
       }
-
     }
+  }
 
-  },
   render() {
     return (
       <SwipeCards
@@ -198,9 +181,9 @@ export default React.createClass({
         showRight={true}
         showLeft={true}
 
-        handleRight={this.handleRight}
-        handleLeft={this.handleLeft}
-        cardRemoved={this.cardRemoved}
+        onRightSwipe={this.onRightSwipe}
+        onLeftSwipe={this.onLeftSwipe}
+        onCardRemoved={this.onCardRemoved}
       />
     )
   }
@@ -238,14 +221,14 @@ const styles = StyleSheet.create({
 | Props name        | Type     | Description                                                 | Default      |
 |-------------------|----------|-------------------------------------------------------------|--------------|
 | cardKey           | String   | React key to be used to for each card                       |              |
-| cardRemoved       | Function | A callback passing the card reference that just got removed |              |
+| onCardRemoved       | Function | A callback passing the card reference that just got removed |              |
 | cards*            | Array    | Data that will be provided as props for the cards           |              |
 | containerStyle    | style    | Override default style                                      |              |
 | dragY             | Boolean  | Allows dragging cards vertically                            | `true`       |
 | draggingDisabled  | Boolean  | Allows dragging or not                                      | `false`      |
-| handleLeft        | Function | Called when card is 'rejected' with that card's data        |              |
-| handleRight         | Function | Called when card is 'passed' with that card's data        |              |
-| hasUpAction    | Boolean  | Includes the possibility to swipe up and its components        | `false`      |
+| onLeftSwipe        | Function | Called when card is swiped left with that card's data. Return true to cancel the animation.        |              |
+| onRightSwipe         | Function | Called when card is swiped right with that card's data. Return true to cancel the animation.        |              |
+| onUpSwipe         | Function | Called when card is swiped up with that card's data. Return true to cancel the animation.        |   | hasUpAction    | Boolean  | Includes the possibility to swipe up and its components        | `false`      |
 | loop              | Boolean  | If true, start again when run out of cards                  | `false`      |
 | upStyle        | style    | Override default style                                         |              |
 | upText         | string   | Text to render on Up vote                                      | `Maybe!`     |
@@ -256,7 +239,7 @@ const styles = StyleSheet.create({
 | leftStyle         | style    | Override default style                                      |              |
 | leftTextStyle     | style    | Override default style                                      |              |
 | onLoop            | Function | Called when card list returns to the beginning              |              |
-| onPush            | Function | A callback clicking the card                                | alert('tap') |
+| onPress            | Function | DEPRECATED: just attach an `onPress` on the component you pass to `renderCard`                                |  |
 | renderCard*       | Function | Renders the card with the current data                      |              |
 | renderLeft        | Function | Renders Left                                                |              |
 | renderLeftButton        | Function | Renders Left button. Takes `onPress` and `disabled` props             |              |
@@ -265,9 +248,9 @@ const styles = StyleSheet.create({
 | renderNoMoreCards | Function | Renders what is shown after swiped last card                |              |
 | renderRight         | Function | Renders Right                                             |              |
 | renderRightButton         | Function | Renders Right Button. Takes `onPress` and `disabled` props          |              |
-| showLeft          | Boolean  | Shows the 'Left'                                            | `true`       |
-| showUp         | Boolean  | Shows the 'Up'                                                 | `true`       |
-| showRight           | Boolean  | Shows the 'Right' component                               | `true`       |
+| showLeft          | Boolean  | Shows the 'Left' label                                            | `true`       |
+| showUp         | Boolean  | Shows the 'Up' label                                                 | `true`       |
+| showRight           | Boolean  | Shows the 'Right' label                               | `true`       |
 | smoothTransition  | Boolean  | Disables a slow transition fading the current card out      | `false`      |
 | stack             | Boolean  | Enables the stack mode                                      | `false`      |
 | stackOffsetX      | Number   | Horizontal offset between cards in stack                    | 25           |
@@ -283,9 +266,5 @@ const styles = StyleSheet.create({
 *required
 
 ### Todo (PRs welcome!)
-- [ ] Shadow when card is being dragged
-- [ ] Example with backend
-- [ ] Example with polaroids
-- [ ] Submit to repos
 - [ ] Testing
-- [ ] Add more args to `cardRemoved`?
+- [ ] Add more args to `onCardRemoved`?

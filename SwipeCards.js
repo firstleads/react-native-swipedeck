@@ -89,13 +89,13 @@ let guid = 0
 type Props = {
   allowGestureTermination: boolean,
   cardKey: string,
-  cardRemoved: Function,
+  onCardRemoved: Function,
   cards: Array<*>,
   dragY: boolean,
   draggingDisabled: boolean,
-  handleUp: Function,
-  handleRight: Function,
-  handleLeft: Function,
+  onUpSwipe: Function,
+  onRightSwipe: Function,
+  onLeftSwipe: Function,
   hasUpAction: boolean,
   leftText: string,
   loop: boolean,
@@ -103,7 +103,6 @@ type Props = {
   upView: React.Element<*>,
   noView: React.Element<*>,
   onLoop: Function,
-  onPress: Function,
   renderCard: Function,
   renderLeftButton: Function,
   renderNoMoreCards: Function,
@@ -124,12 +123,12 @@ export default class SwipeCards extends Component<Props> {
   static defaultProps = {
     allowGestureTermination: true,
     cardKey: 'key',
-    cardRemoved: () => null,
+    onCardRemoved: () => null,
     cards: [],
     dragY: true,
-    handleUp: () => null,
-    handleRight: () => null,
-    handleLeft: () => null,
+    onUpSwipe: () => null,
+    onRightSwipe: () => null,
+    onLeftSwipe: () => null,
     hasUpAction: false,
     leftText: 'Nope!',
     loop: false,
@@ -137,7 +136,6 @@ export default class SwipeCards extends Component<Props> {
     onDragRelease: () => {},
     onDragStart: () => {},
     onLoop: () => null,
-    onPress: () => alert('tap'),
     renderCard: () => null,
     rightText: 'Yup!',
     showUp: true,
@@ -202,10 +200,6 @@ export default class SwipeCards extends Component<Props> {
         this.props.onDragRelease()
         this.state.pan.flattenOffset()
         let velocity
-        if (Math.abs(dx) <= 5 && Math.abs(dy) <= 5) {
-          //meaning the gesture did not cover any distance
-          this.props.onPress(this.state.card)
-        }
 
         if (vx > 0) {
           velocity = clamp(vx, 3, 5)
@@ -232,11 +226,11 @@ export default class SwipeCards extends Component<Props> {
           const hasMovedUp = hasSwipedVertically && this.state.pan.y._value < 0
 
           if (hasMovedRight) {
-            cancelled = this.props.handleRight(this.state.card)
+            cancelled = this.props.onRightSwipe(this.state.card)
           } else if (hasMovedLeft) {
-            cancelled = this.props.handleLeft(this.state.card)
+            cancelled = this.props.onLeftSwipe(this.state.card)
           } else if (hasMovedUp && this.props.hasUpAction) {
-            cancelled = this.props.handleUp(this.state.card)
+            cancelled = this.props.onUpSwipe(this.state.card)
           } else {
             cancelled = true
           }
@@ -247,7 +241,7 @@ export default class SwipeCards extends Component<Props> {
             return
           }
 
-          this.props.cardRemoved(currentIndex[this.guid])
+          this.props.onCardRemoved(currentIndex[this.guid])
 
           if (this.props.smoothTransition) {
             this._advanceState()
@@ -290,6 +284,8 @@ export default class SwipeCards extends Component<Props> {
   }
 
   _forceLeftSwipe = () => {
+    const { onCardRemoved, onCardRemoving } = this.props
+
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: -500, y: 0 },
     }).start(status => {
@@ -298,10 +294,14 @@ export default class SwipeCards extends Component<Props> {
 
       this.cardAnimation = null
     })
-    this.props.cardRemoved(currentIndex[this.guid])
+
+    onCardRemoving(currentIndex[this.guid], 'left')
+    onCardRemoved(currentIndex[this.guid], 'left')
   }
 
   _forceUpSwipe = () => {
+    const { onCardRemoved, onCardRemoving } = this.props
+
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: 0, y: 500 },
     }).start(status => {
@@ -310,10 +310,14 @@ export default class SwipeCards extends Component<Props> {
 
       this.cardAnimation = null
     })
-    this.props.cardRemoved(currentIndex[this.guid])
+
+    onCardRemoving(currentIndex[this.guid], 'up')
+    onCardRemoved(currentIndex[this.guid], 'up')
   }
 
   _forceRightSwipe = () => {
+    const { onCardRemoved, onCardRemoving } = this.props
+
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: 500, y: 0 },
     }).start(status => {
@@ -322,7 +326,9 @@ export default class SwipeCards extends Component<Props> {
 
       this.cardAnimation = null
     })
-    this.props.cardRemoved(currentIndex[this.guid])
+
+    onCardRemoving(currentIndex[this.guid], 'right')
+    onCardRemoved(currentIndex[this.guid], 'right')
   }
 
   _goToNextCard() {
@@ -693,7 +699,7 @@ export default class SwipeCards extends Component<Props> {
       }
 
       this._forceLeftSwipe()
-      this.props.handleLeft(this.state.card)
+      this.props.onLeftSwipe(this.state.card)
     }
 
     const onRightPress = () => {
@@ -705,7 +711,7 @@ export default class SwipeCards extends Component<Props> {
       }
 
       this._forceRightSwipe()
-      this.props.handleRight(this.state.card)
+      this.props.onRightSwipe(this.state.card)
     }
 
     const onUpPress = () => {
@@ -717,7 +723,7 @@ export default class SwipeCards extends Component<Props> {
       }
 
       this._forceUpSwipe()
-      this.props.handleUp(this.state.card)
+      this.props.onUpSwipe(this.state.card)
     }
 
     return (
