@@ -284,7 +284,7 @@ export default class SwipeCards extends Component<Props> {
   }
 
   _forceLeftSwipe = () => {
-    const { onCardRemoved, onCardRemoving } = this.props
+    const { onCardRemoved } = this.props
 
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: -500, y: 0 },
@@ -295,12 +295,11 @@ export default class SwipeCards extends Component<Props> {
       this.cardAnimation = null
     })
 
-    onCardRemoving(currentIndex[this.guid], 'left')
     onCardRemoved(currentIndex[this.guid], 'left')
   }
 
   _forceUpSwipe = () => {
-    const { onCardRemoved, onCardRemoving } = this.props
+    const { onCardRemoved } = this.props
 
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: 0, y: 500 },
@@ -311,12 +310,11 @@ export default class SwipeCards extends Component<Props> {
       this.cardAnimation = null
     })
 
-    onCardRemoving(currentIndex[this.guid], 'up')
     onCardRemoved(currentIndex[this.guid], 'up')
   }
 
   _forceRightSwipe = () => {
-    const { onCardRemoved, onCardRemoving } = this.props
+    const { onCardRemoved } = this.props
 
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: 500, y: 0 },
@@ -327,7 +325,6 @@ export default class SwipeCards extends Component<Props> {
       this.cardAnimation = null
     })
 
-    onCardRemoving(currentIndex[this.guid], 'right')
     onCardRemoved(currentIndex[this.guid], 'right')
   }
 
