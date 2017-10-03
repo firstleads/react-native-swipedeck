@@ -228,7 +228,9 @@ const styles = StyleSheet.create({
 | draggingDisabled  | Boolean  | Allows dragging or not                                      | `false`      |
 | onLeftSwipe        | Function | Called when card is swiped left with that card's data. Return true to cancel the animation.        |              |
 | onRightSwipe         | Function | Called when card is swiped right with that card's data. Return true to cancel the animation.        |              |
-| onUpSwipe         | Function | Called when card is swiped up with that card's data. Return true to cancel the animation.        |   | hasUpAction    | Boolean  | Includes the possibility to swipe up and its components        | `false`      |
+| onUpSwipe         | Function | Called when card is swiped up with that card's data. Return true to cancel the animation.        |   |
+|hasUpAction    | Boolean  | Includes the possibility to swipe up and its components        | `false`      |
+| onSwipeCancelled         | Function | Called after a card swipe is cancelled.        |   |
 | loop              | Boolean  | If true, start again when run out of cards                  | `false`      |
 | upStyle        | style    | Override default style                                         |              |
 | upText         | string   | Text to render on Up vote                                      | `Maybe!`     |
