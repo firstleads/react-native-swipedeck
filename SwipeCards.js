@@ -298,14 +298,12 @@ export default class SwipeCards extends Component<Props> {
     this.cardAnimation = Animated.timing(pan, {
       toValue: { x: PAN_VALUE, y: 0 },
     }).start(status => {
-      this.state.pan.stopAnimation(value => {
+      this.state.pan.stopAnimation(() => {
         choice.then(cancelled => {
           if (status.finished && !cancelled) {
-            this.cardAnimation = Animated.decay(this.state.pan, {
-              velocity: { x: velocity, y: vy },
-              deceleration: 0.98,
-            })
-            this.cardAnimation.start(status => {
+            this.cardAnimation = Animated.timing(pan, {
+              toValue: { x: -500, y: 0 },
+            }).start(status => {
               if (status.finished) {
                 this._advanceState()
                 onCardRemoved(currentIndex[this.guid], 'left')
