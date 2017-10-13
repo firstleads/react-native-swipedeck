@@ -1,7 +1,8 @@
 // @flow
 
 /* Gratefully copied from https://github.com/brentvatne/react-native-animated-demo-tinder */
-import React, { Component } from 'react'
+import * as React from 'react'
+import { Component } from 'react'
 
 import {
   StyleSheet,
@@ -93,16 +94,15 @@ type Props = {
   cards: Array<*>,
   dragY: boolean,
   draggingDisabled: boolean,
-  onUpSwipe: (card: Object) => boolean,
-  onRightSwipe: (card: Object) => boolean,
-  onLeftSwipe: (card: Object) => boolean,
-  onSwipeCancelled: (card: Object) => void,
+  guid: number,
+  onDragStart?: Function,
+  onDragRelease: Function,
   hasUpAction: boolean,
   leftText: string,
   loop: boolean,
   upText: string,
-  upView: React.Element<*>,
-  noView: React.Element<*>,
+  upView?: React.Element<*>,
+  noView?: React.Element<*>,
   onLoop: Function,
   renderCard: Function,
   renderLeftButton: Function,
@@ -120,17 +120,23 @@ type Props = {
   stackOffsetX: number,
   stackOffsetY: number,
 }
-export default class SwipeCards extends Component<Props> {
+type State = {
+  pan: Animated.valueXY,
+  enter: number,
+  cards: Array<Object>,
+  card: Object,
+}
+export default class SwipeCards extends Component<Props, State> {
   static defaultProps = {
     allowGestureTermination: true,
     cardKey: 'key',
     onCardRemoved: () => null,
     cards: [],
     dragY: true,
-    onUpSwipe: () => null,
-    onRightSwipe: () => null,
-    onLeftSwipe: () => null,
-    onSwipeCancelled: () => null,
+    onUpSwipe: () => false,
+    onRightSwipe: () => false,
+    onLeftSwipe: () => false,
+    onSwipeCancelled: () => false,
     hasUpAction: false,
     leftText: 'Nope!',
     loop: false,
@@ -149,8 +155,13 @@ export default class SwipeCards extends Component<Props> {
     stackOffsetY: 0,
     style: styles.container,
   }
+  guid: number
+  lastX: number
+  lastY: number
+  cardAnimation: ?Animated.CompositeAnimation
+  _panResponder: PanResponder
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props)
 
     //Use a persistent variable to track currentIndex instead of a local one.
@@ -181,7 +192,7 @@ export default class SwipeCards extends Component<Props> {
         return false
       },
 
-      onPanResponderGrant: (e, gestureState) => {
+      onPanResponderGrant: () => {
         this.state.pan.setOffset({
           x: this.state.pan.x._value,
           y: this.state.pan.y._value,
@@ -189,7 +200,7 @@ export default class SwipeCards extends Component<Props> {
         this.state.pan.setValue({ x: 0, y: 0 })
       },
 
-      onPanResponderTerminationRequest: (evt, gestureState) =>
+      onPanResponderTerminationRequest: () =>
         this.props.allowGestureTermination,
 
       onPanResponderMove: Animated.event([
@@ -197,7 +208,7 @@ export default class SwipeCards extends Component<Props> {
         { dx: this.state.pan.x, dy: this.props.dragY ? this.state.pan.y : 0 },
       ]),
 
-      onPanResponderRelease: (e, { vx, vy, dx, dy }) => {
+      onPanResponderRelease: (e, { vx, vy, dx }) => {
         this.props.onDragRelease()
         this.state.pan.flattenOffset()
         let velocity
@@ -239,7 +250,7 @@ export default class SwipeCards extends Component<Props> {
           }
 
           //Right or left was cancelled, return the card to normal.
-          cancelled.then(cancelled => {
+          cancelled.then((cancelled) => {
             if (cancelled) {
               this.props.onSwipeCancelled(this.state.card)
               this._resetPan()
@@ -253,7 +264,7 @@ export default class SwipeCards extends Component<Props> {
                 velocity: { x: velocity, y: vy },
                 deceleration: 0.98,
               })
-              this.cardAnimation.start(status => {
+              this.cardAnimation.start((status) => {
                 if (status.finished) this._advanceState()
                 else this._resetState()
 
@@ -297,13 +308,13 @@ export default class SwipeCards extends Component<Props> {
 
     this.cardAnimation = Animated.timing(pan, {
       toValue: { x: PAN_VALUE, y: 0 },
-    }).start(status => {
+    }).start((status) => {
       this.state.pan.stopAnimation(() => {
-        choice.then(cancelled => {
+        choice.then((cancelled) => {
           if (status.finished && !cancelled) {
             this.cardAnimation = Animated.timing(pan, {
               toValue: { x: -500, y: 0 },
-            }).start(status => {
+            }).start((status) => {
               if (status.finished) {
                 this._advanceState()
                 onCardRemoved(currentIndex[this.guid], 'left')
@@ -325,7 +336,7 @@ export default class SwipeCards extends Component<Props> {
 
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: 0, y: 500 },
-    }).start(status => {
+    }).start((status) => {
       if (status.finished && !this.props.onUpSwipe(this.state.card)) {
         this._advanceState()
       } else {
@@ -344,7 +355,7 @@ export default class SwipeCards extends Component<Props> {
 
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: 500, y: 0 },
-    }).start(status => {
+    }).start((status) => {
       if (status.finished && !this.props.onRightSwipe(this.state.card)) {
         this._advanceState()
       } else {
@@ -764,8 +775,8 @@ export default class SwipeCards extends Component<Props> {
             })
           ) : (
             <Button
-              color="red"
-              title="nope"
+              color='red'
+              title='nope'
               onPress={onLeftPress}
               disabled={!this.state.card}
             />
@@ -777,7 +788,7 @@ export default class SwipeCards extends Component<Props> {
             })
           ) : (
             <Button
-              title="maybe"
+              title='maybe'
               onPress={onUpPress}
               disabled={!this.state.card}
             />
@@ -789,7 +800,7 @@ export default class SwipeCards extends Component<Props> {
             })
           ) : (
             <Button
-              title="yep"
+              title='yep'
               onPress={onRightPress}
               disabled={!this.state.card}
             />
