@@ -265,8 +265,11 @@ export default class SwipeCards extends Component<Props, State> {
                 deceleration: 0.98,
               })
               this.cardAnimation.start((status) => {
-                if (status.finished) this._advanceState()
-                else this._resetState()
+                if (status.finished) {
+                  this._advanceState()
+                } else {
+                  this._resetState()
+                }
 
                 this.cardAnimation = null
               })
@@ -463,7 +466,7 @@ export default class SwipeCards extends Component<Props, State> {
     this.state.pan.setValue({ x: 0, y: 0 })
     this.state.enter.setValue(0)
     this._animateEntrance()
-    this._goToNextCard()
+    // this._goToNextCard()
   }
 
   /**
@@ -506,8 +509,8 @@ export default class SwipeCards extends Component<Props, State> {
         this.props.stackOffsetY * cards.length - i * this.props.stackOffsetY
       const lastOffsetY = offsetY + this.props.stackOffsetY
 
-      const opacity = 0.25 + 0.75 / cards.length * (i + 1)
-      const lastOpacity = 0.25 + 0.75 / cards.length * i
+      const opacity = 1 //0.25 + 0.75 / cards.length * (i + 1)
+      const lastOpacity = 1 //0.25 + 0.75 / cards.length * i
 
       const scale = 0.85 + 0.15 / cards.length * (i + 1)
       const lastScale = 0.85 + 0.15 / cards.length * i
