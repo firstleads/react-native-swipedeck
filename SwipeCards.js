@@ -93,12 +93,16 @@ type Props = {
   onCardRemoved: Function,
   cards: Array<*>,
   dragY: boolean,
-  draggingDisabled: boolean,
-  guid: number,
+  guid?: number,
   onDragStart?: Function,
   onDragRelease: Function,
+  onRightSwipe?: Function,
+  onLeftSwipe?: Function,
+  onUpSwipe?: Function,
+  onSwipeCancelled?: Function,
   hasUpAction: boolean,
-  leftText: string,
+  leftText?: string,
+  leftView?: React.Element<*>,
   loop: boolean,
   upText: string,
   upView?: React.Element<*>,
@@ -108,15 +112,15 @@ type Props = {
   renderLeftButton: Function,
   renderNoMoreCards: Function,
   renderRightButton: Function,
-  rightText: string,
-  rightView: React.Element<*>,
+  rightText?: string,
+  rightView?: React.Element<*>,
   showUp: boolean,
   showRight: boolean,
   showleft: boolean,
   smoothTransition: boolean,
   stack: boolean,
   stackDepth: number,
-  stackGuid: string,
+  stackGuid?: string,
   stackOffsetX: number,
   stackOffsetY: number,
 }
@@ -142,6 +146,7 @@ export default class SwipeCards extends Component<Props, State> {
     loop: false,
     upText: 'Maybe!',
     onDragRelease: () => {},
+    onDragStart: () => {},
     onLoop: () => null,
     renderCard: () => null,
     rightText: 'Yup!',
@@ -209,7 +214,6 @@ export default class SwipeCards extends Component<Props, State> {
       ]),
 
       onPanResponderRelease: (e, { vx, vy, dx }) => {
-        this.props.onDragRelease()
         this.state.pan.flattenOffset()
         let velocity
 
@@ -238,14 +242,18 @@ export default class SwipeCards extends Component<Props, State> {
           const hasMovedUp = hasSwipedVertically && this.state.pan.y._value < 0
 
           if (hasMovedRight) {
+            this.props.onDragRelease('right')
             cancelled = Promise.resolve(
               this.props.onRightSwipe(this.state.card)
             )
           } else if (hasMovedLeft) {
+            this.props.onDragRelease('left')
             cancelled = Promise.resolve(this.props.onLeftSwipe(this.state.card))
           } else if (hasMovedUp && this.props.hasUpAction) {
+            this.props.onDragRelease('up')
             cancelled = Promise.resolve(this.props.onUpSwipe(this.state.card))
           } else {
+            this.props.onDragRelease()
             cancelled = Promise.resolve(true)
           }
 
@@ -286,7 +294,7 @@ export default class SwipeCards extends Component<Props, State> {
     this._animateEntrance()
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     if (nextProps.cards !== this.props.cards) {
       if (this.cardAnimation) {
         this.cardAnimation.stop()
