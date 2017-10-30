@@ -93,12 +93,16 @@ type Props = {
   onCardRemoved: Function,
   cards: Array<*>,
   dragY: boolean,
-  draggingDisabled: boolean,
-  guid: number,
+  guid?: number,
   onDragStart?: Function,
   onDragRelease: Function,
+  onRightSwipe?: Function,
+  onLeftSwipe?: Function,
+  onUpSwipe?: Function,
+  onSwipeCancelled?: Function,
   hasUpAction: boolean,
-  leftText: string,
+  leftText?: string,
+  leftView?: React.Element<*>,
   loop: boolean,
   upText: string,
   upView?: React.Element<*>,
@@ -108,15 +112,15 @@ type Props = {
   renderLeftButton: Function,
   renderNoMoreCards: Function,
   renderRightButton: Function,
-  rightText: string,
-  rightView: React.Element<*>,
+  rightText?: string,
+  rightView?: React.Element<*>,
   showUp: boolean,
   showRight: boolean,
   showleft: boolean,
   smoothTransition: boolean,
   stack: boolean,
   stackDepth: number,
-  stackGuid: string,
+  stackGuid?: string,
   stackOffsetX: number,
   stackOffsetY: number,
 }
@@ -142,6 +146,7 @@ export default class SwipeCards extends Component<Props, State> {
     loop: false,
     upText: 'Maybe!',
     onDragRelease: () => {},
+    onDragStart: () => {},
     onLoop: () => null,
     renderCard: () => null,
     rightText: 'Yup!',
@@ -286,7 +291,7 @@ export default class SwipeCards extends Component<Props, State> {
     this._animateEntrance()
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     if (nextProps.cards !== this.props.cards) {
       if (this.cardAnimation) {
         this.cardAnimation.stop()
