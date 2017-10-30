@@ -214,7 +214,6 @@ export default class SwipeCards extends Component<Props, State> {
       ]),
 
       onPanResponderRelease: (e, { vx, vy, dx }) => {
-        this.props.onDragRelease()
         this.state.pan.flattenOffset()
         let velocity
 
@@ -243,14 +242,18 @@ export default class SwipeCards extends Component<Props, State> {
           const hasMovedUp = hasSwipedVertically && this.state.pan.y._value < 0
 
           if (hasMovedRight) {
+            this.props.onDragRelease('right')
             cancelled = Promise.resolve(
               this.props.onRightSwipe(this.state.card)
             )
           } else if (hasMovedLeft) {
+            this.props.onDragRelease('left')
             cancelled = Promise.resolve(this.props.onLeftSwipe(this.state.card))
           } else if (hasMovedUp && this.props.hasUpAction) {
+            this.props.onDragRelease('up')
             cancelled = Promise.resolve(this.props.onUpSwipe(this.state.card))
           } else {
+            this.props.onDragRelease()
             cancelled = Promise.resolve(true)
           }
 
