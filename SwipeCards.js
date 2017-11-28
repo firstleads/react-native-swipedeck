@@ -140,6 +140,9 @@ export default class SwipeCards extends Component<Props, State> {
     onUpSwipe: () => false,
     onRightSwipe: () => false,
     onLeftSwipe: () => false,
+    onUpPress: () => false,
+    onRightPress: () => false,
+    onLeftPress: () => false,
     onSwipeCancelled: () => false,
     hasUpAction: false,
     leftText: 'Nope!',
@@ -768,7 +771,14 @@ export default class SwipeCards extends Component<Props, State> {
   }
 
   render() {
-    const { renderLeftButton, renderRightButton, renderUpButton } = this.props
+    const {
+      renderLeftButton,
+      renderRightButton,
+      renderUpButton,
+      onLeftPress,
+      onUpPress,
+      onRightPress,
+    } = this.props
 
     return (
       <View style={styles.container}>
@@ -790,17 +800,11 @@ export default class SwipeCards extends Component<Props, State> {
               disabled={!this.state.card}
             />
           )}
-          {renderUpButton ? (
+          {!!renderUpButton && (
             renderUpButton({
               onPress: this.onUpPress,
               disabled: !this.state.card,
             })
-          ) : (
-            <Button
-              title='maybe'
-              onPress={onUpPress}
-              disabled={!this.state.card}
-            />
           )}
           {renderRightButton ? (
             renderRightButton({
