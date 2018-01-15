@@ -1,8 +1,11 @@
 {
   "name": "react-native-swipedeck",
-  "version": "0.3.0-beta.17",
+  "version": "0.3.0-beta.18",
   "description": "UI for quickly making yes/no decisions on a set of cards",
-  "main": "SwipeCards.js",
+  "main": "dist/SwipeCards.js",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "tsc",
     "prepublish": "npm build",
