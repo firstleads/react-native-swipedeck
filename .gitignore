@@ -3,5 +3,5 @@ node_modules/
 .vscode/
 npm-debug.log
 testings/
-SwipeCards.js
-Defaults.js
+*.log
+dist/
