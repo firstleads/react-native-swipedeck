@@ -1,6 +1,6 @@
 {
   "name": "react-native-swipedeck",
-  "version": "0.3.0-beta.22",
+  "version": "0.3.0-beta.24",
   "description": "UI for quickly making yes/no decisions on a set of cards",
   "main": "dist/index.js",
   "module": "dist/index.js",
