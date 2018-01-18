@@ -32,14 +32,12 @@
     "url": "https://github.com/first-io/react-native-swipedeck/issues"
   },
   "homepage": "https://github.com/first-io/react-native-swipedeck#readme",
-  "peerDependencies": {
-    "react": "^16.2.0",
-    "react-native": "^0.52.0"
-  },
   "dependencies": {
     "clamp": "^1.0.1"
   },
   "devDependencies": {
+    "react": "^16.2.0",
+    "react-native": "^0.52.0",
     "@types/": "expo/react-native-action-sheet",
     "@types/react": "^16.0.34",
     "@types/react-native": "^0.52.0"

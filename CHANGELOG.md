@@ -1,3 +1,11 @@
+## 0.3.0
+
+1/18/2018
+
+- Migrated to TypeScript
+- Fix stuttering animation when card is swiped right or when left button was pressed
+- fixed various errors
+
 ## 0.3.0-beta.14
 
 11/28/2017
