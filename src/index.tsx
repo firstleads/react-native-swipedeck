@@ -495,8 +495,8 @@ export default class SwipeCards<T> extends Component<Props<T>, State> {
           inputRange: [0, 1],
           outputRange: [lastOffsetX, offsetX],
         }),
-        opacity: this.props.smoothTransition
-          ? 1
+        opacity: i >= this.props.stackDepth
+          ? 0
           : this.state.enter.interpolate({
               inputRange: [0, 1],
               outputRange: [lastOpacity, opacity],
