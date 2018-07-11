@@ -494,7 +494,6 @@ export default class SwipeCards<T> extends Component<Props<T>, State> {
 
     //Get the next stack of cards to render.
     const cards = this.props.cards.slice(0, this.props.stackDepth).reverse()
-    console.log(cards, this.props.cards)
 
     return cards.map((card, i) => {
       const offsetX =
