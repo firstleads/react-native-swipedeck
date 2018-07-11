@@ -218,54 +218,48 @@ const styles = StyleSheet.create({
 ```
 
 ### Props
-| Props name        | Type     | Description                                                 | Default      |
-|-------------------|----------|-------------------------------------------------------------|--------------|
-| cardKey           | String   | React key to be used to for each card                       |              |
-| onCardRemoved       | Function | A callback passing the card reference that just got removed |              |
-| cards*            | Array    | Data that will be provided as props for the cards           |              |
-| containerStyle    | style    | Override default style                                      |              |
-| dragY             | Boolean  | Allows dragging cards vertically                            | `true`       |
-| draggingDisabled  | Boolean  | Allows dragging or not                                      | `false`      |
-| onLeftSwipe        | Function | Called when card is swiped left with that card's data. Return true to cancel the animation.        |              |
-| onRightSwipe         | Function | Called when card is swiped right with that card's data. Return true to cancel the animation.        |              |
-| onUpSwipe         | Function | Called when card is swiped up with that card's data. Return true to cancel the animation.        |   |
-|hasUpAction    | Boolean  | Includes the possibility to swipe up and its components        | `false`      |
-| onSwipeCancelled         | Function | Called after a card swipe is cancelled.        |   |
-| loop              | Boolean  | If true, start again when run out of cards                  | `false`      |
-| upStyle        | style    | Override default style                                         |              |
-| upText         | string   | Text to render on Up vote                                      | `Maybe!`     |
-| upTextStyle    | style    | Override default style                                         |              |
-| upView         | element  | React component to render on a Up vote                         |              |
-| leftText            | string   | Text to render on No vote                                 | `Nope!`      |
-| leftView            | element  | React component to render on a No vote                    |              |
-| leftStyle         | style    | Override default style                                      |              |
-| leftTextStyle     | style    | Override default style                                      |              |
-| onLoop            | Function | Called when card list returns to the beginning              |              |
-| renderCard*       | Function | Renders the card with the current data                      |              |
-| renderLeft        | Function | Renders Left                                                |              |
-| renderLeftButton        | Function | Renders Left button. Takes `onPress` and `disabled` props             |              |
-| renderUp       | Function | Renders Up                                                     |              |
-| renderUpButton       | Function | Renders Up Button. Takes `onPress` and `disabled` props                  |              |
-| renderNoMoreCards | Function | Renders what is shown after swiped last card                |              |
-| renderRight         | Function | Renders Right                                             |              |
-| renderRightButton         | Function | Renders Right Button. Takes `onPress` and `disabled` props          |              |
-| showLeft          | Boolean  | Shows the 'Left' label                                            | `true`       |
-| showUp         | Boolean  | Shows the 'Up' label                                                 | `true`       |
-| showRight           | Boolean  | Shows the 'Right' label                               | `true`       |
-| smoothTransition  | Boolean  | Disables a slow transition fading the current card out      | `false`      |
-| stack             | Boolean  | Enables the stack mode                                      | `false`      |
-| stackOffsetX      | Number   | Horizontal offset between cards in stack                    | 25           |
-| stackOffsetY      | Number   | Vertical offset between cards in stack                      | 0            |
-| rightStyle          | style    | Override default style                                    |              |
-| rightText           | string   | Text to render on Yes vote                                | `Yup!`       |
-| rightTextStyle      | style    | Override default style                                    |              |
-| rightView           | element  | React component to render on a Yes vote                   |              |
-
-
-
-
-*required
+| Prop name         | Type                                 | Default  | Description                                                            |
+| ----------------- | ------------------------------------ | -------- | ---------------------------------------------------------------------- |
+| cardKey           | (card: T) => Key                     |          | React key to be used to for each card                                  |
+| cards             | Array<T>                             |          | Data that will be provided as props for the cards                      |
+| containerStyle    | style                                |          | Override default style                                                 |
+| dragY             | Boolean                              | `true`   | Allows dragging cards vertically                                       |
+| draggingDisabled  | Boolean                              | `false`  | Allows dragging or not                                                 |
+| hasUpAction       | Boolean                              | `false`  | Includes the possibility to swipe up and its components                |
+| leftStyle         | style                                |          | Override default style                                                 |
+| leftText          | string                               | `Nope!`  | Text to render on left swipe                                           |
+| leftTextStyle     | style                                |          | Override default style                                                 |
+| leftView          | ReactNode                            |          | React component to render on a left swipe                              |
+| loop              | Boolean                              | `false`  | If true, start again when run out of cards                             |
+| onCardRemoved     | () => void                           |          | A callback passing the card reference that just got removed            |
+| onLeftSwipe       | SwipeHandler<T>                      |          | Called when card is swiped left. Return true to cancel the animation.  |
+| onLoop            | () => void                           |          | Called when card list returns to the beginning                         |
+| onRightSwipe      | SwipeHandler<T>                      |          | Called when card is swiped right. Return true to cancel the animation. |
+| onSwipeCancelled  | (card: T) => boolean                 |          | Called after a card swipe is cancelled.                                |
+| onUpSwipe         | SwipeHandler<T>                      |          | Called when card is swiped up. Return true to cancel the animation.    |
+| renderCard        | StatelessComponent                   |          | Renders the card with the current data                                 |
+| renderLeft        | (pan: Animated.ValueXY) => ReactNode |          | Renders Left                                                           |
+| renderLeftButton  | ButtonRenderer                       |          | Renders Left button. Takes `onPress` and `disabled` props              |
+| renderNoMoreCards | StatelessComponent                   |          | Renders what is shown after swiped last card                           |
+| renderRight       | (pan: Animated.ValueXY) => ReactNode |          | Renders Right                                                          |
+| renderRightButton | ButtonRenderer                       |          | Renders Right Button. Takes `onPress` and `disabled` props             |
+| renderUp          | (pan: Animated.ValueXY) => ReactNode |          | Renders Up                                                             |
+| renderUpButton    | ButtonRenderer                       |          | Renders Up Button. Takes `onPress` and `disabled` props                |
+| rightStyle        | style                                |          | Override default style                                                 |
+| rightText         | string                               | `Yup!`   | Text to render on right swipe                                          |
+| rightTextStyle    | style                                |          | Override default style                                                 |
+| rightView         | ReactNode                            |          | React component to render on a right swipe                             |
+| showLeft          | Boolean                              | `true`   | Shows the 'Left' label                                                 |
+| showRight         | Boolean                              | `true`   | Shows the 'Right' label                                                |
+| showUp            | Boolean                              | `true`   | Shows the 'Up' label                                                   |
+| smoothTransition  | Boolean                              | `false`  | Disables a slow transition fading the current card out                 |
+| stack             | Boolean                              | `false`  | Enables the stack mode                                                 |
+| stackOffsetX      | Number                               | 25       | Horizontal offset between cards in stack                               |
+| stackOffsetY      | Number                               | 0        | Vertical offset between cards in stack                                 |
+| upStyle           | style                                |          | Override default style                                                 |
+| upText            | string                               | `Maybe!` | Text to render on Up swipe                                             |
+| upTextStyle       | style                                |          | Override default style                                                 |
+| upView            | ReactNode                            |          | React component to render on a Up swipe                                |
 
 ### Todo (PRs welcome!)
 - [ ] Testing
-- [ ] Add more args to `onCardRemoved`?

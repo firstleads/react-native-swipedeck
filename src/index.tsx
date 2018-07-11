@@ -108,11 +108,12 @@ export interface Props<T extends React.ReactNode = React.ReactNode> {
   onDragRelease: (direction?: SwipeDirection) => void
   onDragStart: () => void
   onLeftPress: () => void
+  offsetY: number
   onLeftSwipe: SwipeHandler<T>
   onLoop: () => void
   onRightPress: () => void
   onRightSwipe: SwipeHandler<T>
-  onSwipeCancelled: (card: any) => boolean
+  onSwipeCancelled: (card: T) => boolean
   onUpSwipe: SwipeHandler<T>
   renderCard: React.StatelessComponent
   renderLeft: (pan: Animated.ValueXY) => React.ReactNode
@@ -134,7 +135,6 @@ export interface Props<T extends React.ReactNode = React.ReactNode> {
   stackDepth: number
   stackOffsetX: number
   stackOffsetY: number
-  offsetY: number
   upStyle: ViewStyle
   upText: string
   upTextStyle: TextStyle
