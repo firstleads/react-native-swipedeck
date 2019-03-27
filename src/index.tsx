@@ -87,11 +87,15 @@ const styles = StyleSheet.create({
 export type SwipeDirection = 'left' | 'up' | 'right'
 export type SwipeHandler<T> = (
   card: T,
-  method: 'swipe' | 'button_press',
+  method: 'swipe' | 'button_press'
 ) => boolean | Promise<boolean>
-export type ButtonRenderer = (
-  { onPress, disabled }: { onPress: () => void; disabled: boolean },
-) => React.ReactNode
+export type ButtonRenderer = ({
+  onPress,
+  disabled,
+}: {
+  onPress: () => void
+  disabled: boolean
+}) => React.ReactNode
 
 export interface Props<T extends React.ReactNode = React.ReactNode> {
   cardKey: (card: T) => React.Key
@@ -256,17 +260,17 @@ export default class SwipeCards<T> extends Component<Props<T>, State> {
           if (hasMovedRight) {
             this.props.onDragRelease('right')
             cancelled = Promise.resolve(
-              this.props.onRightSwipe(this.getCurrentCard(), 'swipe'),
+              this.props.onRightSwipe(this.getCurrentCard(), 'swipe')
             )
           } else if (hasMovedLeft) {
             this.props.onDragRelease('left')
             cancelled = Promise.resolve(
-              this.props.onLeftSwipe(this.getCurrentCard(), 'swipe'),
+              this.props.onLeftSwipe(this.getCurrentCard(), 'swipe')
             )
           } else if (hasMovedUp && this.props.hasUpAction) {
             this.props.onDragRelease('up')
             cancelled = Promise.resolve(
-              this.props.onUpSwipe(this.getCurrentCard(), 'swipe'),
+              this.props.onUpSwipe(this.getCurrentCard(), 'swipe')
             )
           } else {
             this.props.onDragRelease()
@@ -288,7 +292,7 @@ export default class SwipeCards<T> extends Component<Props<T>, State> {
                 velocity: { x: velocity, y: vy },
                 deceleration: 0.98,
               })
-              this.cardAnimation.start((status) => {
+              this.cardAnimation.start(status => {
                 if (status.finished) {
                   this.advanceState()
                 } else {
@@ -326,14 +330,14 @@ export default class SwipeCards<T> extends Component<Props<T>, State> {
     const { pan } = this.state
 
     const choice = Promise.resolve(
-      onLeftSwipe(this.getCurrentCard(), 'button_press'),
+      onLeftSwipe(this.getCurrentCard(), 'button_press')
     )
 
     const PAN_VALUE = !!onLeftSwipe ? -50 : -500
 
     this.cardAnimation = Animated.timing(pan, {
       toValue: { x: PAN_VALUE, y: 0 },
-    }).start((status) => {
+    }).start(status => {
       this.state.pan.stopAnimation(() => {
         choice
           .then((cancelled: boolean) => {
@@ -343,7 +347,7 @@ export default class SwipeCards<T> extends Component<Props<T>, State> {
               } else {
                 this.cardAnimation = Animated.timing(pan, {
                   toValue: { x: -500, y: 0 },
-                }).start((status) => {
+                }).start(status => {
                   if (status.finished) {
                     this.advanceState()
                   } else this.resetState()
@@ -367,7 +371,7 @@ export default class SwipeCards<T> extends Component<Props<T>, State> {
 
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: 0, y: 500 },
-    }).start((status) => {
+    }).start(status => {
       if (
         status.finished &&
         !this.props.onUpSwipe(this.getCurrentCard(), 'button_press')
@@ -389,14 +393,14 @@ export default class SwipeCards<T> extends Component<Props<T>, State> {
     const { pan } = this.state
 
     const choice = Promise.resolve(
-      onRightSwipe(this.getCurrentCard(), 'button_press'),
+      onRightSwipe(this.getCurrentCard(), 'button_press')
     )
 
     const PAN_VALUE = !!onRightSwipe ? 50 : 500
 
     this.cardAnimation = Animated.timing(pan, {
       toValue: { x: PAN_VALUE, y: 0 },
-    }).start((status) => {
+    }).start(status => {
       this.state.pan.stopAnimation(() => {
         choice
           .then((cancelled: boolean) => {
@@ -406,7 +410,7 @@ export default class SwipeCards<T> extends Component<Props<T>, State> {
               } else {
                 this.cardAnimation = Animated.timing(pan, {
                   toValue: { x: 500, y: 0 },
-                }).start((status) => {
+                }).start(status => {
                   if (status.finished) {
                     this.advanceState()
                   } else this.resetState()
@@ -642,7 +646,10 @@ export default class SwipeCards<T> extends Component<Props<T>, State> {
       const inner = this.props.noView ? (
         this.props.noView
       ) : (
-        <Text style={[styles.leftText, this.props.leftTextStyle]}>
+        <Text
+          allowFontScaling={false}
+          style={[styles.leftText, this.props.leftTextStyle]}
+        >
           {this.props.leftText}
         </Text>
       )
@@ -687,7 +694,10 @@ export default class SwipeCards<T> extends Component<Props<T>, State> {
       const inner = this.props.upView ? (
         this.props.upView
       ) : (
-        <Text style={[styles.upText, this.props.upTextStyle]}>
+        <Text
+          allowFontScaling={false}
+          style={[styles.upText, this.props.upTextStyle]}
+        >
           {this.props.upText}
         </Text>
       )
@@ -730,7 +740,10 @@ export default class SwipeCards<T> extends Component<Props<T>, State> {
       const inner = this.props.rightView ? (
         this.props.rightView
       ) : (
-        <Text style={[styles.rightText, this.props.rightTextStyle]}>
+        <Text
+          allowFontScaling={false}
+          style={[styles.rightText, this.props.rightTextStyle]}
+        >
           {this.props.rightText}
         </Text>
       )
@@ -770,8 +783,8 @@ export default class SwipeCards<T> extends Component<Props<T>, State> {
             })
           ) : (
             <Button
-              color='red'
-              title='nope'
+              color="red"
+              title="nope"
               onPress={onLeftPress}
               disabled={!this.getCurrentCard()}
             />
@@ -788,7 +801,7 @@ export default class SwipeCards<T> extends Component<Props<T>, State> {
             })
           ) : (
             <Button
-              title='yep'
+              title="yep"
               onPress={onRightPress}
               disabled={!this.getCurrentCard()}
             />

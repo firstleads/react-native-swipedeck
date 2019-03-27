@@ -1,6 +1,6 @@
 {
   "name": "react-native-swipedeck",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "UI for quickly making yes/no decisions on a set of cards",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -28,6 +28,10 @@
     {
       "name": "Ben Makuh",
       "url": "https://first.io"
+    },
+    {
+      "name": "Monte Johnston",
+      "url": "https://github.com/monjohn"
     }
   ],
   "license": "MIT",
