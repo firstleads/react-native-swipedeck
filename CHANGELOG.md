@@ -1,3 +1,9 @@
+## 0.6.0
+
+3/27/18
+
+- Prevent font scaling on `rightText`, `leftText`, and `upText`
+
 ## 0.5.0
 
 7/11/18
